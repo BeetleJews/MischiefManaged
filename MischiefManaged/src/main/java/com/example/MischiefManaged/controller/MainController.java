@@ -3,6 +3,7 @@ package com.example.MischiefManaged.controller;
 import com.example.MischiefManaged.domain.User;
 import com.example.MischiefManaged.repo.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,9 @@ import java.util.HashMap;
 public class MainController {
     private final MessageRepo messageRepo;
 
+    @Value("${spring.profiles.active}")
+    private String profile;
+
     @Autowired
     public MainController(MessageRepo messageRepo) {
         this.messageRepo = messageRepo;
@@ -25,10 +29,13 @@ public class MainController {
     public String main(Model model, @AuthenticationPrincipal User user) {
         HashMap<Object, Object> data = new HashMap<>();
 
-        data.put("profile", user);
-        data.put("messages", messageRepo.findAll());
+        if(user != null) {
+            data.put("profile", user);
+            data.put("messages", messageRepo.findAll());
+        }
 
         model.addAttribute("frontendData", data);
+        model.addAttribute("isDevMode", "dev".equals(profile));     //проверка на то что это дев версия(информация на уровне темплэйтов)
 
         return "index";
     }
