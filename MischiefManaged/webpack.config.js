@@ -21,15 +21,22 @@ module.exports = {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
-          loader: 'babel-loader',
-          options: {
+            loader: 'babel-loader',
+            options: {
             presets: ['@babel/preset-env']
           }
         }
       },
       {
-        test: /\.vue$/,
-        loader: 'vue-loader'
+            test: /\.vue$/,
+            loader: 'vue-loader'
+      },
+      {
+            test: /\.css$/,
+            use: [
+                'vue-style-loader',
+                'css-loader'
+            ]
       }
     ]
   },
