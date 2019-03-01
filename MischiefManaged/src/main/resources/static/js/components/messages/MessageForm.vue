@@ -12,10 +12,10 @@
 </template>
 
 <script>
-    import messagesApi from 'api/messages'
+    import { mapActions } from 'vuex'
 
     export default{
-        props:['messages', 'messageAttr'],
+        props:['messageAttr'],
         data() {      //data не объект а функция которая возвращает объект
             return {
                 text: '',
@@ -29,32 +29,16 @@
             }
         },
         methods: {
-            save() {     //функции верхнего уровня должны быть безымянными, что бы быть привязанными к компоненту, к которому они относятся
+            ...mapActions(['addMessageAction', 'updateMessageAction']),
+            save() {
                 const message = {
                     id: this.id,
                     text: this.text
-                    }
-
-                if(this.id){
-                    messagesApi.update(message).then(result =>
-                        result.json().then(data => {
-                            const index = this.messages.findIndex(item => item.id === data.id)        //перед тем как перезаписать сообщение, нужно удалить старое
-                            this.messages.splice(index, 1, data)        //(индекс элемента который нужно ззменить, количество элементов на замену, на какой заменить)
-                        })
-                    )
-                }else{
-                    messagesApi.add(message).then(result =>     //метод save присутствует во Vue.resource
-                          result.json().then(data => {
-                                const index = this.messages.findIndex(item => item.id === data.id)
-
-                                if(index > -1) {
-                                    this.messages.splice(index, 1, data)
-                                }else {
-                                    this.messages.push(data)
-                                }
-                          })
-
-                    )
+                }
+                if (this.id) {
+                    this.updateMessageAction(message)
+                } else {
+                    this.addMessageAction(message)
                 }
                 this.text = ''
                 this.id = ''
