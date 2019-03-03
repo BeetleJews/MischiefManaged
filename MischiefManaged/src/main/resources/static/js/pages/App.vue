@@ -2,14 +2,30 @@
     <v-app>
         <v-toolbar app>
             <v-toolbar-title>Mischief Managed</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-avatar v-if="profile" class="mx-1"
-                    :size=40
-                    color="grey lighten-4"
+            <v-btn flat round
+                   v-if="profile"
+                   :disabled="$route.path === '/'"
+                   @click="showMessages"
             >
-                <img :src="profile.userpic" alt="avatar">
-            </v-avatar>
-            <span v-if="profile">{{profile.name}} {{profile.name}}</span>
+                Messages
+            </v-btn>
+
+            <v-spacer></v-spacer>
+
+            <v-btn flat round
+                   v-if="profile"
+                   :disabled="$route.path === '/profile'"
+                   @click="showProfile"
+            >
+                <v-avatar class="mx-1"
+                        :size=30
+                        color="grey lighten-4"
+                >
+                    <img :src="profile.userpic" alt="avatar">
+                </v-avatar>
+
+                <span v-if="profile">{{profile.name}}</span>
+            </v-btn>
             <v-btn v-if="profile" icon href="/logout">
                 <v-icon>exit_to_app</v-icon>
             </v-btn>
@@ -17,14 +33,7 @@
         </v-toolbar>
 
         <v-content>
-            <v-container v-if="!profile">
-                Автаризация через <a href="/login">Google</a>
-            </v-container>
-
-            <v-container v-if="profile">
-                <messages-list/>
-            </v-container>
-
+            <router-view></router-view>
         </v-content>
 
 
@@ -33,15 +42,19 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import MessagesList from 'components/messages/MessageList.vue'
 import { addHandler } from 'util/ws'
 
     export default {
-        components: {
-            MessagesList
-        },
         computed: mapState(['profile']),                                                                        //Для mapState и mapGetters используем computed раздел для подключения.
-        methods: mapMutations(['addMessageMutation', 'updateMessageMutation', 'removeMessageMutation']),        //Для mapMutations и mapActions используем methods раздел для подключения
+        methods: {
+            ...mapMutations(['addMessageMutation', 'updateMessageMutation', 'removeMessageMutation']),          //Для mapMutations и mapActions используем methods раздел для подключения
+            showMessages(){
+                this.$router.push('/')
+            },
+            showProfile(){
+                this.$router.push('/profile')
+            }
+        },
         created() {
             addHandler(data => {
                 if(data.objectType === 'MESSAGE') {
@@ -63,6 +76,11 @@ import { addHandler } from 'util/ws'
                 }
             })
 
+        },
+        beforeMount(){                          //до того как все заиницилизируется, будем проверять активирован ли профиль
+            if(!this.profile) {
+                this.$router.replace('/auth')   //и если он не активирован, то перенаправляем (router.replace работает, как router.push, с той лишь разницей, что переход осуществляется без добавления новой записи в историю навигации, а заменяет текущую запись в нём.)
+            }
         }
     }
 </script>

@@ -10,7 +10,7 @@ export default new Vuex.Store({
         profile: frontendData.profile
   },
   getters: {        //геттеры это вычисляемые поля которые будут храниться в store и будут доступны отовсюду(геттеры не модифицируют данные а только возвращают какое то представление данных)
-        sortedMessages: state => state.messages.sort((a, b) => -(a.id - b.id))
+        sortedMessages: state => (state.messages || []).sort((a, b) => -(a.id - b.id))
   },
   mutations: {      //мутации это синхронные события которые могут изменить данные
         addMessageMutation (state, message) {       //message это аргумент который будет приходить снаружи
