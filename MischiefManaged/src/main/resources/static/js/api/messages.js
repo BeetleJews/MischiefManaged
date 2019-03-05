@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-const messages = Vue.resource('/message{/id}')      /*Во многих естах используется resource,
+const messages = Vue.resource('/message{/id}')      /*Во многих местах используется resource,
                                                         поэтому что бы не создавать его каждый раз,
                                                         мы его вынесли в отдельный класс*/
 
