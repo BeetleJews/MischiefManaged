@@ -1,11 +1,11 @@
 <template>
     <v-card class="my-1">
-        <v-card-title primary-title>
+        <v-card-text primary-title>
             <i>({{message.id}})</i>
             {{message.text}}
-            <v-spacer></v-spacer>
-            <span class="grey--text">{{message.creationDate}}</span>
-        </v-card-title>
+
+        </v-card-text>
+        <media v-if="message.link" :message="message"></media>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="edit">
@@ -24,9 +24,11 @@
 
 <script>
     import { mapActions } from 'vuex'
+    import Media from 'components/media/Media.vue'
 
     export default {
         props:['message', 'editMessage'],
+        components: { Media },
         methods:{
             ...mapActions(['removeMessageAction']),
             edit() {
