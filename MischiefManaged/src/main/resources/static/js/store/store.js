@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import messagesApi from 'api/messages'
+import commentApi from 'api/comment'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {      //состояние это единый контейнер для хранения наших объектов
-        messages: frontendData.messages,
+        messages,
         profile: frontendData.profile
   },
   getters: {        //геттеры это вычисляемые поля которые будут храниться в store и будут доступны отовсюду(геттеры не модифицируют данные а только возвращают какое то представление данных)
@@ -37,6 +38,22 @@ export default new Vuex.Store({
                 ]
             }
         },
+        addCommentMutation(state, comment) {
+            const updateIndex = state.messages.findIndex(item => item.id === comment.message.id)
+            const message = state.messages[updateIndex]
+
+                    state.messages = [
+                        ...state.messages.slice(0, updateIndex),
+                        {
+                            ...message,
+                            comments: [
+                                ...message.comments,
+                                comment
+                            ]
+                        },
+                        ...state.messages.slice(updateIndex + 1)
+                    ]
+                },
 
   },
   actions: {        //действия это асинхронные события, которые сами никаких модификаций не производят, но позволяют отпустить поток в исполнение далее
@@ -63,6 +80,11 @@ export default new Vuex.Store({
                 commit('removeMessageMutation', message)
             }
         },
+        async addCommentAction({commit, state}, comment) {
+            const response = await commentApi.add(comment)
+            const data = await response.json()
+            commit('addCommentMutation', comment)
+        }
 
   }
 })

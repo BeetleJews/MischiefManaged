@@ -9,6 +9,7 @@
 
     <script th:inline="javascript">
         var frontendData = [[${frontendData}]];     //проверка на то авторизован ли пользователь
+        var messages = [# th:utext="${messages}" /];      //передаем строку текстового шаблона
     </script>
 
 </head>
