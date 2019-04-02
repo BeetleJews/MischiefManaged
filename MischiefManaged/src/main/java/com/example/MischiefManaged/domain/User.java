@@ -1,6 +1,7 @@
 package com.example.MischiefManaged.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -14,8 +15,11 @@ import java.time.LocalDateTime;
 @Data       //при помощи этой lombok анатации, можно не генерить геттеры и сетеры
 public class User implements Serializable {
     @Id
+    @JsonView(Views.IdName.class)
     private String id;      //id будут приходить от гугла в форсате String, поэтому не Long
+    @JsonView(Views.IdName.class)
     private String name;
+    @JsonView(Views.IdName.class)
     private String userpic;
     private String email;
     private String gender;

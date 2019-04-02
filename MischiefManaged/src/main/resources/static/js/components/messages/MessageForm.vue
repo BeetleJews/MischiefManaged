@@ -3,6 +3,7 @@
         <v-text-field
                 label="Write something..."
                 v-model="text"
+                @keyup.enter="save"
         />       <!--благодаря v-model все изменения в этом импуте, будут попадать в поле text-->
 
         <v-btn icon @click="save">
