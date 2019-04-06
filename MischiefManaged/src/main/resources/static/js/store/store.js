@@ -23,7 +23,7 @@ export default new Vuex.Store({
         updateMessageMutation (state, message) {
             const updateIndex = state.messages.findIndex(item => item.id === message.id)
             state.messages = [
-                ...state.messages.slice(0, updateIndex),       //остановился тут 11:00
+                ...state.messages.slice(0, updateIndex),
                 message,
                 ...state.messages.slice(updateIndex + 1)
             ]
@@ -42,20 +42,33 @@ export default new Vuex.Store({
             const updateIndex = state.messages.findIndex(item => item.id === comment.message.id)
             const message = state.messages[updateIndex]
 
-                    state.messages = [
-                        ...state.messages.slice(0, updateIndex),
-                        {
-                            ...message,
-                            comments: [
-                                ...message.comments,
-                                comment
+            if (!message.comments){
+            state.messages = [
+                                ...state.messages.slice(0, updateIndex),
+                                {
+                                    ...message,
+                                    comments: [
+                                        comment
+                                    ]
+                                },
+                                ...state.messages.slice(updateIndex + 1)
                             ]
-                        },
-                        ...state.messages.slice(updateIndex + 1)
-                    ]
-                },
-
-  },
+            }
+            else if (!message.comments.find(it => it.id === comment.id)) {
+                state.messages = [
+                    ...state.messages.slice(0, updateIndex),
+                    {
+                        ...message,
+                        comments: [
+                            ...message.comments,
+                            comment
+                        ]
+                    },
+                    ...state.messages.slice(updateIndex + 1)
+                ]
+            }
+        },
+    },
   actions: {        //действия это асинхронные события, которые сами никаких модификаций не производят, но позволяют отпустить поток в исполнение далее
         async addMessageAction({commit, state}, message) {     //async нужен для того что бы избежать огромного количества then
             const result = await messagesApi.add(message)
@@ -83,7 +96,7 @@ export default new Vuex.Store({
         async addCommentAction({commit, state}, comment) {
             const response = await commentApi.add(comment)
             const data = await response.json()
-            commit('addCommentMutation', comment)
+            commit('addCommentMutation', data)
         }
 
   }
