@@ -76,7 +76,7 @@ public class MessageController {
             @PathVariable("id") Message messageFromDb,      //сообщение которое бунем менять
             @RequestBody Message message) throws IOException       //сообщение на которое нужно изменить
     {
-        message.setCreationDate(LocalDateTime.now());
+        //message.setCreationDate(LocalDateTime.now());
         BeanUtils.copyProperties(message, messageFromDb, "id");     //копирует из message в messageFromDb все поля, кроме id
         fillMeta(messageFromDb);
 

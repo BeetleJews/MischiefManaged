@@ -47,7 +47,12 @@ import { addHandler } from 'util/ws'
     export default {
         computed: mapState(['profile']),                                                                        //Для mapState и mapGetters используем computed раздел для подключения.
         methods: {
-            ...mapMutations(['addMessageMutation', 'updateMessageMutation', 'removeMessageMutation']),          //Для mapMutations и mapActions используем methods раздел для подключения
+            ...mapMutations([
+                'addMessageMutation',
+                'updateMessageMutation',
+                'removeMessageMutation',
+                'addCommentMutation'
+                ]),          //Для mapMutations и mapActions используем methods раздел для подключения
             showMessages(){
                 this.$router.push('/')
             },
@@ -67,6 +72,14 @@ import { addHandler } from 'util/ws'
                             break
                         case 'REMOVE' :
                             this.removeMessageMutation(data.body)
+                            break
+                        default:
+                            console.error('Looks like the event type is unknown "${data.eventType}"')
+                    }
+                } else if(data.objectType === 'COMMENT') {
+                    switch (data.eventType) {
+                        case 'CREATE' :
+                            this.addCommentMutation(data.body)
                             break
                         default:
                             console.error('Looks like the event type is unknown "${data.eventType}"')

@@ -1,16 +1,9 @@
 <template>
-    <v-list two-line>
-        <v-subheader>
-            Comments
-        </v-subheader>
-
+    <v-list three-line>
         <template
                 v-for="(item, index) in comments"
         >
-            <v-divider
-                    v-if="index > 0"
-                    :key="index"
-            ></v-divider>
+            <v-divider></v-divider>
 
             <comment-item
                     :comment="item"
@@ -18,7 +11,10 @@
             ></comment-item>
         </template>
 
-        <comment-form :message-id="messageId"></comment-form>
+        <v-divider></v-divider>
+
+
+        <comment-form :message-id="messageId" class="pt-2"></comment-form>
     </v-list>
 </template>
 

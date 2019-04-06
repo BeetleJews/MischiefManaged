@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card flat>
         <v-flex v-if="type === 'href'" xs12 sm6 offset-sm3>
             <v-img v-if="message.linkCover" :src="message.linkCover" aspect-ratio="2.75"></v-img>
             <v-card-title>
